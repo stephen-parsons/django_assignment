@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Friends</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Popper JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="header" style="float: right">
+			<a href="/logout"><button>Logout</button></a>
+		</div>
+		<div class="content">
+			<h1>Hello, {{user.alias}}!</h1>
+			{% if not user.friends.all  %}
+			<p>You don't have any friends yet!</p>
+			{% else %}
+			<p>Here is the list of your friends:</p>
+			<table class="table-bordered">
+				<tr>
+					<th>Alias</th>
+					<th>Action</th>
+				</tr>
+				{% for user in user.friends.all %}
+				<tr>
+					<td>{{user.alias}}</td>
+					<td><a href="user/{{user.id}}">View Profile</a> | <a href="/user/{{user.id}}/unfriend">Remove as Friend</a></td>	
+				</tr>	
+				{% endfor %}
+			</table><br>
+			{% endif %}
+			{% if empty == True %}
+			<p> There is no one else here! Tell your friends to join!</p>
+			{% elif not not_friends.all %}
+			<p>You must be pretty popular, you are friends with everyone!</p>
+			{% else %}
+			<p>Other users not in your friend's list:</p>
+			<table class="table-bordered">
+				<tr>
+					<th>Alias</th>
+					<th>Action</th>
+				</tr>
+				{% for user in not_friends %}
+				<tr>
+					<td><a href="user/{{user.id}}">{{user.alias}}</a></td>
+					<td>
+						<form action="/user/{{user.id}}/friend" method="post">
+							{% csrf_token %}
+							<input type="submit" name="submit" value="Add Friend">
+							
+						</form>
+					</td>
+				</tr>
+				{% endfor %}
+			{% endif %}	
+			</table>
+		</div>
+	</div>
+</body>
+</html>
